@@ -1,19 +1,9 @@
-﻿using System.Text;
+﻿using System;
+using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace erronkaTPVsistema
 {
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml
-    /// </summary>
     public partial class MainWindow : Window
     {
         public MainWindow()
@@ -21,30 +11,49 @@ namespace erronkaTPVsistema
             InitializeComponent();
         }
 
-        private void btnLogin_Click(object sender, RoutedEventArgs e)
+        // 🔹 Hacemos el método async para poder usar await
+        private async void btnLogin_Click(object sender, RoutedEventArgs e)
         {
-            if (string.IsNullOrWhiteSpace(txtUsuario.Text) || string.IsNullOrWhiteSpace(txtPassword.Password.ToString()))
+            // Validamos campos vacíos
+            if (string.IsNullOrWhiteSpace(txtUsuario.Text) || string.IsNullOrWhiteSpace(txtPassword.Password))
             {
-                txt_erroreak.Text = "Erabiltzaile edo pasahitza okerrak";
+                txt_erroreak.Text = "Erabiltzaile edo pasahitza hutsik daude.";
                 return;
             }
-            if (erabiltzaileenKlasea.checkErabiltzaileak(txtUsuario.Text, txtPassword.Password))
+
+            // 🔹 Conectamos con la base de datos
+            await erabiltzaileenKlasea.ConnectDatabaseAsync("jatetxea", "admin");
+
+            // 🔹 Verificamos si el usuario existe
+            bool erabiltzaileZuzena = await erabiltzaileenKlasea.checkErabiltzaileak(txtUsuario.Text, txtPassword.Password);
+
+            if (erabiltzaileZuzena)
             {
-                if (txtUsuario.Text == bbdd.erabiltzaileak.admin)
+                // 🔹 Verificamos si es admin
+                bool adminDa = await erabiltzaileenKlasea.checkAdmin(txtUsuario.Text);
+
+                if (adminDa)
                 {
-                    aplikazioa.erabiltzailea = "admin";
                     MessageBox.Show("Administrazio erabiltzailea");
-                    Window window = new MainAppWindow(true, txtUsuario.Text);
+                    var window = new MainAppWindow(true, txtUsuario.Text);
+                    window.Show();
+                }
+                else
+                {
+                    MessageBox.Show("Erabiltzaile arrunta");
+                    var window = new MainAppWindow(false, txtUsuario.Text);
+                    window.Show();
                 }
 
+                // Cerramos la ventana de login
+                this.Close();
             }
-            else 
+            else
             {
                 txt_erroreak.Text = "Erabiltzaile edo pasahitza okerrak";
                 txtUsuario.Clear();
                 txtPassword.Clear();
             }
-                
         }
     }
 }

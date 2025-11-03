@@ -17,3 +17,12 @@ D:\interfazeen_garapena\ERRONKA\erronkaTPVsistema\obj\Debug\net8.0-windows\refin
 D:\interfazeen_garapena\ERRONKA\erronkaTPVsistema\obj\Debug\net8.0-windows\erronkaTPVsistema.pdb
 D:\interfazeen_garapena\ERRONKA\erronkaTPVsistema\obj\Debug\net8.0-windows\erronkaTPVsistema.genruntimeconfig.cache
 D:\interfazeen_garapena\ERRONKA\erronkaTPVsistema\obj\Debug\net8.0-windows\ref\erronkaTPVsistema.dll
+D:\interfazeen_garapena\ERRONKA\erronkaTPVsistema\obj\Debug\net8.0-windows\MainAppWindow.g.cs
+D:\interfazeen_garapena\ERRONKA\erronkaTPVsistema\obj\Debug\net8.0-windows\erronkaTPVsistema_MarkupCompile.lref
+D:\interfazeen_garapena\ERRONKA\erronkaTPVsistema\bin\Debug\net8.0-windows\Microsoft.Extensions.DependencyInjection.Abstractions.dll
+D:\interfazeen_garapena\ERRONKA\erronkaTPVsistema\bin\Debug\net8.0-windows\Microsoft.Extensions.Logging.Abstractions.dll
+D:\interfazeen_garapena\ERRONKA\erronkaTPVsistema\bin\Debug\net8.0-windows\Npgsql.dll
+D:\interfazeen_garapena\ERRONKA\erronkaTPVsistema\obj\Debug\net8.0-windows\erronkaTPVsistema.csproj.AssemblyReference.cache
+D:\interfazeen_garapena\ERRONKA\erronkaTPVsistema\obj\Debug\net8.0-windows\MainAppWindow.baml
+D:\interfazeen_garapena\ERRONKA\erronkaTPVsistema\obj\Debug\net8.0-windows\erronkaTPVsistema.sourcelink.json
+D:\interfazeen_garapena\ERRONKA\erronkaTPVsistema\obj\Debug\net8.0-windows\erronkaT.2C212B7B.Up2Date

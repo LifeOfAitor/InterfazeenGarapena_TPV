@@ -1,0 +1,23 @@
+services:
+
+  db:
+    image: postgres
+    container_name: postgresql_jatetxea
+    restart: always
+    shm_size: 128mb
+    ports:
+      - 5432:5432
+    
+    volumes:
+    - ./postgresql:/var/lib/postgresql
+
+    environment:
+        POSTGRES_USER: admin 
+        POSTGRES_PASSWORD: admin
+        POSTGRES_DB: jatetxea
+
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8080:8080
