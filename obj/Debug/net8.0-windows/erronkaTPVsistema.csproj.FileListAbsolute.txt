@@ -26,3 +26,5 @@ D:\interfazeen_garapena\ERRONKA\erronkaTPVsistema\obj\Debug\net8.0-windows\erron
 D:\interfazeen_garapena\ERRONKA\erronkaTPVsistema\obj\Debug\net8.0-windows\MainAppWindow.baml
 D:\interfazeen_garapena\ERRONKA\erronkaTPVsistema\obj\Debug\net8.0-windows\erronkaTPVsistema.sourcelink.json
 D:\interfazeen_garapena\ERRONKA\erronkaTPVsistema\obj\Debug\net8.0-windows\erronkaT.2C212B7B.Up2Date
+D:\interfazeen_garapena\ERRONKA\erronkaTPVsistema\obj\Debug\net8.0-windows\AdminWindow.g.cs
+D:\interfazeen_garapena\ERRONKA\erronkaTPVsistema\obj\Debug\net8.0-windows\AdminWindow.baml

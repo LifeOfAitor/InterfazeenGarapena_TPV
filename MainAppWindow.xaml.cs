@@ -19,19 +19,10 @@ namespace erronkaTPVsistema
     /// </summary>
     public partial class MainAppWindow : Window
     {
-        public MainAppWindow(bool user, string erabiltzailea)
+        public MainAppWindow(string erabiltzailea)
         {
             InitializeComponent();
-            if (user)
-            {
-                // admin menua
-                this.Title = "administratzaile menua";
-            }
-            else
-            {
-                // erabiltzaile menua
-                this.Title = $"{erabiltzailea} menua";
-            }
+            this.Title = $"{erabiltzailea} menua";
         }
     }
 }

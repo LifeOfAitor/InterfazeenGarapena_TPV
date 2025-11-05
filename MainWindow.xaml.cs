@@ -22,26 +22,26 @@ namespace erronkaTPVsistema
             }
 
             // 🔹 Conectamos con la base de datos
-            await erabiltzaileenKlasea.ConnectDatabaseAsync("jatetxea", "admin");
+            await erabiltzaileenKlasea.ConnectDatabaseAsync("jatetxea");
 
             // 🔹 Verificamos si el usuario existe
             bool erabiltzaileZuzena = await erabiltzaileenKlasea.checkErabiltzaileak(txtUsuario.Text, txtPassword.Password);
 
             if (erabiltzaileZuzena)
             {
-                // 🔹 Verificamos si es admin
+                // Verificamos si es admin
                 bool adminDa = await erabiltzaileenKlasea.checkAdmin(txtUsuario.Text);
 
                 if (adminDa)
                 {
-                    MessageBox.Show("Administrazio erabiltzailea");
-                    var window = new MainAppWindow(true, txtUsuario.Text);
+                    //MessageBox.Show("Administrazio erabiltzailea"+ adminDa);
+                    var window = new AdminWindow();
                     window.Show();
                 }
                 else
                 {
-                    MessageBox.Show("Erabiltzaile arrunta");
-                    var window = new MainAppWindow(false, txtUsuario.Text);
+                    //MessageBox.Show("Erabiltzaile arrunta" +adminDa);
+                    var window = new MainAppWindow(txtUsuario.Text);
                     window.Show();
                 }
 
