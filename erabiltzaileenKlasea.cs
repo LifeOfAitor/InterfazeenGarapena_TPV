@@ -24,12 +24,8 @@ namespace erronkaTPVsistema
 
             try
             {
-                // Crea el DataSource
+                //sortzen du datu basera iristeko beharrezkoa den dataSource-a (ate bat bezala)
                 dataSource = NpgsqlDataSource.Create(connectionString);
-
-                // Opcional: probar una conexión rápida
-                await using var conn = await dataSource.OpenConnectionAsync();
-                //MessageBox.Show("Conexión a PostgreSQL establecida correctamente.");
             }
             catch (Exception ex)
             {
@@ -50,7 +46,7 @@ namespace erronkaTPVsistema
 
             try
             {
-                await using var conn = await dataSource.OpenConnectionAsync();
+                await using var conn = await dataSource.OpenConnectionAsync(); // datu basera konektatzen da
                 await using var cmd = new NpgsqlCommand(query, conn);
                 cmd.Parameters.AddWithValue("@erabiltzaile", erabiltzaile);
                 cmd.Parameters.AddWithValue("@pasahitza", pasahitza);
@@ -78,7 +74,7 @@ namespace erronkaTPVsistema
 
             try
             {
-                await using var conn = await dataSource.OpenConnectionAsync();
+                await using var conn = await dataSource.OpenConnectionAsync();// datu basera konektatzen da
                 await using var cmd = new NpgsqlCommand(query, conn);
                 cmd.Parameters.AddWithValue("@erabiltzaile", erabiltzaile);
 
@@ -90,6 +86,53 @@ namespace erronkaTPVsistema
             {
                 Console.WriteLine($"Errorea egon da administratzailea konprobatzeko momentuan: {ex.Message}");
                 return false;
+            }
+        }
+        public static List<string> kargatuErabiltzaileak()
+        {
+            List<string> erabiltzaileak = new List<string>();
+            if (dataSource == null)
+            {
+                MessageBox.Show("Ez dago konexiorik sortuta");
+                return erabiltzaileak;
+            }
+            const string query = "SELECT izena FROM Erabiltzaileak WHERE mota = 'user';";
+            try
+            {
+                using var conn = dataSource.OpenConnection(); // datu basera konektatzen da
+                using var cmd = new NpgsqlCommand(query, conn);
+                using var reader = cmd.ExecuteReader();
+                while (reader.Read())
+                {
+                    erabiltzaileak.Add(reader.GetString(0));
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Errorea erabiltzaileak kargatzerakoan: {ex.Message}");
+            }
+            return erabiltzaileak;
+        }
+        public static void sortuErabiltzailea(string izena, string pasahitza)
+        {
+            if (dataSource == null)
+            {
+                MessageBox.Show("Ez dago konexiorik sortuta");
+                return;
+            }
+            const string query = "INSERT INTO Erabiltzaileak (izena, pasahitza, mota) VALUES (@izena, @pasahitza, @mota);";
+            try
+            {
+                using var conn = dataSource.OpenConnection(); // datu basera konektatzen da
+                using var cmd = new NpgsqlCommand(query, conn);
+                cmd.Parameters.AddWithValue("@izena", izena);
+                cmd.Parameters.AddWithValue("@pasahitza", pasahitza);
+                cmd.Parameters.AddWithValue("@mota", "user");
+                cmd.ExecuteNonQuery();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Errorea erabiltzailea sortzerakoan: {ex.Message}");
             }
         }
     }
