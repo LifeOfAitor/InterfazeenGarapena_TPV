@@ -19,28 +19,39 @@ namespace erronkaTPVsistema
     /// </summary>
     public partial class AdminWindow : Window
     {
+        List<string> erabiltzaileak = null;
         public AdminWindow()
         {
             InitializeComponent();
+            erabiltzaileak = erabiltzaileenKlasea.kargatuErabiltzaileak();
         }
 
         private void sortu_erabiltzailea_Click(object sender, RoutedEventArgs e)
         {
-            //sortu lehio berria erabiltzailea sortzeko
+            Window sortuErabiltzaileaWindow = new sortu_editatu("sortu", erabiltzaileak, null);
+            sortuErabiltzaileaWindow.ShowDialog();
+            list_box_lista.Items.Clear();
+            erakutsiErabiltzaileak();
+            list_box_lista.Visibility = Visibility.Visible;
         }
 
         private void aldatu_erabiltzailea_Click(object sender, RoutedEventArgs e)
         {
-            //adldatzeko izena edo pasahitza
+            Window sortuErabiltzaileaWindow = new sortu_editatu("editatu", erabiltzaileak, list_box_lista.SelectedItem.ToString().Trim());
+            sortuErabiltzaileaWindow.ShowDialog();
         }
 
         private void ezabatu_erabiltzailea_Click(object sender, RoutedEventArgs e)
         {
-            
+            erabiltzaileenKlasea.ezabatuErabiltzailea(list_box_lista.SelectedItem.ToString().Trim());
+            list_box_lista.Items.Clear();
+            erakutsiErabiltzaileak();
         }
 
         private void begiratu_erabiltzailea_Click(object sender, RoutedEventArgs e)
         {
+            erabiltzaileak_grid.Visibility = Visibility.Visible;
+            biltegia_grid.Visibility = Visibility.Hidden;
             list_box_lista.Items.Clear();
             erakutsiErabiltzaileak();
             list_box_lista.Visibility = Visibility.Visible;
@@ -48,7 +59,8 @@ namespace erronkaTPVsistema
 
         private void begiratu_biltegia_Click(object sender, RoutedEventArgs e)
         {
-
+            biltegia_grid.Visibility = Visibility.Visible;
+            erabiltzaileak_grid.Visibility = Visibility.Hidden;
         }
 
         private void list_box_lista_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -68,7 +80,7 @@ namespace erronkaTPVsistema
 
         private void erakutsiErabiltzaileak()
         {
-            List<string> erabiltzaileak = erabiltzaileenKlasea.kargatuErabiltzaileak();
+            erabiltzaileak = erabiltzaileenKlasea.kargatuErabiltzaileak();
             foreach (string erabiltzailea in erabiltzaileak)
             {
                 list_box_lista.Items.Add(erabiltzailea);

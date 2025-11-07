@@ -120,19 +120,59 @@ namespace erronkaTPVsistema
                 MessageBox.Show("Ez dago konexiorik sortuta");
                 return;
             }
-            const string query = "INSERT INTO Erabiltzaileak (izena, pasahitza, mota) VALUES (@izena, @pasahitza, @mota);";
+            const string query = "INSERT INTO Erabiltzaileak (izena, pasahitza, mota) VALUES (@izena, @pasahitza, 'user');";
             try
             {
                 using var conn = dataSource.OpenConnection(); // datu basera konektatzen da
                 using var cmd = new NpgsqlCommand(query, conn);
                 cmd.Parameters.AddWithValue("@izena", izena);
                 cmd.Parameters.AddWithValue("@pasahitza", pasahitza);
-                cmd.Parameters.AddWithValue("@mota", "user");
                 cmd.ExecuteNonQuery();
             }
             catch (Exception ex)
             {
                 MessageBox.Show($"Errorea erabiltzailea sortzerakoan: {ex.Message}");
+            }
+        }
+        public static void ezabatuErabiltzailea(string izena)
+        {
+            if (dataSource == null)
+            {
+                MessageBox.Show("Ez dago konexiorik sortuta");
+                return;
+            }
+            const string query = "DELETE FROM Erabiltzaileak WHERE izena = @izena;";
+            try
+            {
+                using var conn = dataSource.OpenConnection(); // datu basera konektatzen da
+                using var cmd = new NpgsqlCommand(query, conn);
+                cmd.Parameters.AddWithValue("@izena", izena);
+                cmd.ExecuteNonQuery();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Errorea erabiltzailea ezabatzekoan: {ex.Message}");
+            }
+        }
+        public static void aldatuErabiltzailea(string izena, string pasahitza)
+        {
+            if (dataSource == null)
+            {
+                MessageBox.Show("Ez dago konexiorik sortuta");
+                return;
+            }
+            const string query = "UPDATE Erabiltzaileak SET pasahitza = @pasahitza WHERE izena = @izena;";
+            try
+            {
+                using var conn = dataSource.OpenConnection(); // datu basera konektatzen da
+                using var cmd = new NpgsqlCommand(query, conn);
+                cmd.Parameters.AddWithValue("@izena", izena);
+                cmd.Parameters.AddWithValue("@pasahitza", pasahitza);
+                cmd.ExecuteNonQuery();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Errorea erabiltzailea aldatzerakoan: {ex.Message}");
             }
         }
     }

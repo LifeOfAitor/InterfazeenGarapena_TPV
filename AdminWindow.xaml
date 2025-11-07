@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:erronkaTPVsistema"
         mc:Ignorable="d"
+        WindowStartupLocation="CenterScreen"
         Title="AdminWindow" Height="360" Width="419">
     <DockPanel>
         <Menu DockPanel.Dock="Top">
@@ -16,10 +17,16 @@
                 <MenuItem Header="Begiratu" Click="begiratu_biltegia_Click"/>
             </MenuItem>
         </Menu>
-        <Grid>
+        <Grid x:Name="erabiltzaileak_grid" Visibility="Visible">
             <ListBox x:Name="list_box_lista" Margin="10,10,209,64" SelectionChanged="list_box_lista_SelectionChanged" Visibility="Hidden"/>
             <Button x:Name="btn_aldatu" Content="Aldatu" HorizontalAlignment="Left" Margin="246,21,0,0" VerticalAlignment="Top" Height="43" Width="93" Visibility="Hidden" Click="aldatu_erabiltzailea_Click"/>
             <Button x:Name="btn_ezabatu" Content="Ezabatu" HorizontalAlignment="Left" Margin="246,93,0,0" VerticalAlignment="Top" Height="43" Width="93" Visibility="Hidden" Click="ezabatu_erabiltzailea_Click"/>
         </Grid>
+        <Grid x:Name="biltegia_grid" Visibility="Hidden">
+            <ListBox x:Name="list_box_biltegilista" Margin="10,10,209,64" SelectionChanged="list_box_lista_SelectionChanged" Visibility="Hidden"/>
+            <Button x:Name="btn_aldatu_stocka" Content="Aldatu" HorizontalAlignment="Left" Margin="246,21,0,0" VerticalAlignment="Top" Height="43" Width="93" Visibility="Hidden" Click="aldatu_erabiltzailea_Click"/>
+            <Button x:Name="btn_ezabatubiltegia" Content="Ezabatu" HorizontalAlignment="Left" Margin="246,93,0,0" VerticalAlignment="Top" Height="43" Width="93" Visibility="Hidden" Click="ezabatu_erabiltzailea_Click"/>
+        </Grid>
+        
     </DockPanel>
 </Window>
