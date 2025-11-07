@@ -6,27 +6,75 @@
         xmlns:local="clr-namespace:erronkaTPVsistema"
         mc:Ignorable="d"
         WindowStartupLocation="CenterScreen"
-        Title="AdminWindow" Height="360" Width="419">
+        Title="Administrazioa" Height="400" Width="600">
+
     <DockPanel>
+
         <Menu DockPanel.Dock="Top">
             <MenuItem Header="Erabiltzaileak">
-                <MenuItem Header="Sortu" Click="sortu_erabiltzailea_Click"/>
-                <MenuItem Header="Begiratu" Click="begiratu_erabiltzailea_Click"/>
+                <MenuItem Header="Sortu" Click="SortuErabiltzailea_Click"/>
+                <MenuItem Header="Begiratu" Click="BegiratuErabiltzaileak_Click"/>
             </MenuItem>
             <MenuItem Header="Biltegia">
-                <MenuItem Header="Begiratu" Click="begiratu_biltegia_Click"/>
+                <MenuItem Header="Begiratu" Click="BegiratuBiltegia_Click"/>
             </MenuItem>
         </Menu>
-        <Grid x:Name="erabiltzaileak_grid" Visibility="Visible">
-            <ListBox x:Name="list_box_lista" Margin="10,10,209,64" SelectionChanged="list_box_lista_SelectionChanged" Visibility="Hidden"/>
-            <Button x:Name="btn_aldatu" Content="Aldatu" HorizontalAlignment="Left" Margin="246,21,0,0" VerticalAlignment="Top" Height="43" Width="93" Visibility="Hidden" Click="aldatu_erabiltzailea_Click"/>
-            <Button x:Name="btn_ezabatu" Content="Ezabatu" HorizontalAlignment="Left" Margin="246,93,0,0" VerticalAlignment="Top" Height="43" Width="93" Visibility="Hidden" Click="ezabatu_erabiltzailea_Click"/>
+
+        <Grid x:Name="MainContentGrid">
+
+            <Grid x:Name="ErabiltzaileakGrid" Visibility="Hidden">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <ListBox x:Name="ListBoxErabiltzaileak" 
+                         Grid.Column="0" 
+                         Margin="10" 
+                         SelectionChanged="ListBoxErabiltzaileak_SelectionChanged"/>
+
+                <StackPanel Grid.Column="1" Margin="10">
+                    <Button x:Name="BtnAldatuErabiltzailea" 
+                            Content="Aldatu" 
+                            Height="40" Width="120" Margin="0,10,0,10" 
+                            Click="AldatuErabiltzailea_Click"/>
+
+                    <Button x:Name="BtnEzabatuErabiltzailea" 
+                            Content="Ezabatu" 
+                            Height="40" Width="120" Margin="0,10,0,10" 
+                            Click="EzabatuErabiltzailea_Click"/>
+                </StackPanel>
+            </Grid>
+
+            <Grid x:Name="BiltegiaGrid" Visibility="Visible">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <ListBox x:Name="ListBoxBiltegia" 
+                         Grid.Column="0" 
+                         Margin="10" 
+                         DisplayMemberPath="Izena"
+                         SelectionChanged="ListBoxBiltegia_SelectionChanged"/>
+
+                <StackPanel Grid.Column="1" Margin="10">
+                    <Button x:Name="BtnAldatuStocka" 
+                            Content="Aldatu Stock" 
+                            Height="40" Width="160" Margin="0,10,0,10" 
+                            Click="AldatuStocka_Click"/>
+
+                    <Button x:Name="BtnEzabatuProduktua" 
+                            Content="Ezabatu Produktua" 
+                            Height="40" Width="160" Margin="0,10,0,10" 
+                            Click="EzabatuProduktua_Click"/>
+                    <Label Content="Stock" HorizontalAlignment="Left" Margin="10,0,0,0" VerticalAlignment="Center"/>
+                    <TextBox x:Name="txt_stock" TextWrapping="Wrap" Text="" Margin="10,3,10,0" IsReadOnly="True" VerticalAlignment="Center"/>
+                    <Label Content="Stock berria" HorizontalAlignment="Left" Margin="10,0,0,0" VerticalAlignment="Center"/>
+                    <TextBox x:Name="txt_stockBerria" TextWrapping="Wrap" Text="" Margin="10,3,10,0" VerticalAlignment="Center"/>
+                </StackPanel>
+            </Grid>
+
         </Grid>
-        <Grid x:Name="biltegia_grid" Visibility="Hidden">
-            <ListBox x:Name="list_box_biltegilista" Margin="10,10,209,64" SelectionChanged="list_box_lista_SelectionChanged" Visibility="Hidden"/>
-            <Button x:Name="btn_aldatu_stocka" Content="Aldatu" HorizontalAlignment="Left" Margin="246,21,0,0" VerticalAlignment="Top" Height="43" Width="93" Visibility="Hidden" Click="aldatu_erabiltzailea_Click"/>
-            <Button x:Name="btn_ezabatubiltegia" Content="Ezabatu" HorizontalAlignment="Left" Margin="246,93,0,0" VerticalAlignment="Top" Height="43" Width="93" Visibility="Hidden" Click="ezabatu_erabiltzailea_Click"/>
-        </Grid>
-        
     </DockPanel>
 </Window>

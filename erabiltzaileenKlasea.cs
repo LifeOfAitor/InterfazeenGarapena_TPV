@@ -88,6 +88,7 @@ namespace erronkaTPVsistema
                 return false;
             }
         }
+        //datu baseko erabiltzaile normalak kargatzen ditu lista batean
         public static List<string> kargatuErabiltzaileak()
         {
             List<string> erabiltzaileak = new List<string>();
@@ -113,6 +114,8 @@ namespace erronkaTPVsistema
             }
             return erabiltzaileak;
         }
+
+        //erabiltzaile berri bat sortzen du datu basean
         public static void sortuErabiltzailea(string izena, string pasahitza)
         {
             if (dataSource == null)
@@ -134,6 +137,8 @@ namespace erronkaTPVsistema
                 MessageBox.Show($"Errorea erabiltzailea sortzerakoan: {ex.Message}");
             }
         }
+
+        //ezarritako izena duen erabiltzailea ezabatzen du datu basetik
         public static void ezabatuErabiltzailea(string izena)
         {
             if (dataSource == null)
@@ -154,6 +159,8 @@ namespace erronkaTPVsistema
                 MessageBox.Show($"Errorea erabiltzailea ezabatzekoan: {ex.Message}");
             }
         }
+
+        //ezarritako izena duen erabiltzailearen pasahitza aldatzen du
         public static void aldatuErabiltzailea(string izena, string pasahitza)
         {
             if (dataSource == null)
@@ -175,5 +182,111 @@ namespace erronkaTPVsistema
                 MessageBox.Show($"Errorea erabiltzailea aldatzerakoan: {ex.Message}");
             }
         }
+
+        //biltegiko produktuak kargatzen ditu array batean
+        public static List<Produktua> kargatuBiltegia()
+        {
+            var biltegia = new List<Produktua>();
+
+            if (dataSource == null)
+            {
+                MessageBox.Show("Ez dago konexiorik sortuta");
+                return biltegia;
+            }
+
+            const string query = "SELECT izena, stock FROM produktuak;";
+            try
+            {
+                using var conn = dataSource.OpenConnection();
+                using var cmd = new NpgsqlCommand(query, conn);
+                using var reader = cmd.ExecuteReader();
+
+                while (reader.Read())
+                {
+                    string izena = reader.GetString(0);
+                    int stock = reader.GetInt32(1); // stock como entero
+                    biltegia.Add(new Produktua(izena, stock));
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Errorea biltegia kargatzerakoan: {ex.Message}");
+            }
+
+            return biltegia;
+        }
+        //kargatu kategoriak
+        public static List<string> kargatuKategoriak()
+        {
+            List<string> kategoriak = new List<string>();
+            if (dataSource == null)
+            {
+                MessageBox.Show("Ez dago konexiorik sortuta");
+                return kategoriak;
+            }
+            const string query = "SELECT izena FROM Kategoriak;";
+            try
+            {
+                using var conn = dataSource.OpenConnection(); // datu basera konektatzen da
+                using var cmd = new NpgsqlCommand(query, conn);
+                using var reader = cmd.ExecuteReader();
+                while (reader.Read())
+                {
+                    kategoriak.Add(reader.GetString(0));
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Errorea kategoriak kargatzerakoan: {ex.Message}");
+            }
+            return kategoriak;
+        }
+
+        //ezabatu produktua
+        public static void ezabatuProduktua(string izena)
+        {
+            if (dataSource == null)
+            {
+                MessageBox.Show("Ez dago konexiorik sortuta");
+                return;
+            }
+            const string query = "DELETE FROM Produktuak WHERE izena = @izena;";
+            try
+            {
+                using var conn = dataSource.OpenConnection(); // datu basera konektatzen da
+                using var cmd = new NpgsqlCommand(query, conn);
+                cmd.Parameters.AddWithValue("@izena", izena);
+                cmd.ExecuteNonQuery();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Errorea produktua ezabatzekoan: {ex.Message}");
+            }
+        }
+
+        //hautatutako produktuaren stocka aldatzeko
+        public static void aldatuStock(string produktua, int stockBerria)
+        {
+            if (dataSource == null)
+            {
+                MessageBox.Show("Ez dago konexiorik sortuta");
+                return;
+            }
+            const string query = "UPDATE Produktuak SET stock = @stockBarria WHERE izena = @produktua;";
+            try
+            {
+                using var conn = dataSource.OpenConnection(); // datu basera konektatzen da
+                using var cmd = new NpgsqlCommand(query, conn);
+                cmd.Parameters.AddWithValue("@produktua", produktua);
+                cmd.Parameters.AddWithValue("@stockBarria", stockBerria);
+                cmd.ExecuteNonQuery();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Errorea erabiltzailea aldatzerakoan: {ex.Message}");
+            }
+        }
+
+
     }
 }
