@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace erronkaTPVsistema
 {
+    // administrazio menutik erabiliko diren produktuentzako objetua
     internal class Produktua
     {
         public string Izena { get; set; }

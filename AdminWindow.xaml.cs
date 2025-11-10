@@ -21,7 +21,6 @@ namespace erronkaTPVsistema
     {
         List<string> erabiltzaileak = null;
         List<Produktua> biltegia = null;
-        List<string> produktuak = null;
 
         public AdminWindow()
         {
@@ -102,7 +101,7 @@ namespace erronkaTPVsistema
             {
                 if (string.IsNullOrWhiteSpace(txt_stockBerria.Text))
                 {
-                    MessageBox.Show("Mesedez, sartu zenbaki bat stock berria ezartzeko.", "Sarrera falta");
+                    MessageBox.Show("Mesedez, sartu zenbaki bat stock berria ezartzeko.");
                     return;
                 }
 

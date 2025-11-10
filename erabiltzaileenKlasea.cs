@@ -283,10 +283,8 @@ namespace erronkaTPVsistema
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Errorea erabiltzailea aldatzerakoan: {ex.Message}");
+                MessageBox.Show($"Errorea stocka aldatzerakoan: {ex.Message}");
             }
         }
-
-
     }
 }

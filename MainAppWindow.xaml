@@ -3,10 +3,116 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:sys="clr-namespace:System;assembly=mscorlib"
         xmlns:local="clr-namespace:erronkaTPVsistema"
         mc:Ignorable="d"
+        WindowStartupLocation="CenterScreen"
         Title="MainAppWindow" Height="750" Width="1000">
+
     <Grid>
-        
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="0.25*"/>
+            <ColumnDefinition Width="0.75*"/>
+        </Grid.ColumnDefinitions>
+
+        <!-- ezkerreko menuko elementuak zenbak okupatuko duten -->
+        <Grid Grid.Column="0" Background="#1A202C" Margin="0,0,5,0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <TextBlock Grid.Row="0" Text="TPV Elkartea" 
+                       FontSize="28" FontWeight="ExtraBold" Foreground="#68D391" 
+                       Margin="10,20" HorizontalAlignment="Center"/>
+
+            <!-- Stackpanel botoiak jartzeko -->
+            <StackPanel Grid.Row="1" VerticalAlignment="Top">
+                <Button Content="Erreserbak"
+                        Click="Button_Reservas_Click"
+                        Padding="20"
+                        Margin="20"/>
+
+                <Button Content="Kudeaketa"
+                        Click="Button_Gestion_Click"
+                        Padding="20"
+                        Margin="20"/>
+            </StackPanel>
+
+            <Button Grid.Row="2" Content="Atera"
+                    Background="#E53E3E" Margin="10,10,10,20"
+                    Click="Button_Exit_Click"/>
+
+        </Grid>
+
+        <!-- kontenido printzipala hemen(75%) -->
+        <Border Grid.Column="1" Background="#3D4B5D" CornerRadius="15" Margin="5" Padding="10">
+            <Grid>
+                <Grid x:Name="ReservasView" Visibility="Visible">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <!-- 0: Título -->
+                        <RowDefinition Height="Auto"/>
+                        <!-- 1: Fecha y Txanda (Comida/Cena) -->
+                        <RowDefinition Height="*"/>
+                        <!-- 2: Mesas (Area flexible) -->
+                        <RowDefinition Height="Auto"/>
+                        <!-- 3: Botón de Acción/Estado -->
+                    </Grid.RowDefinitions>
+
+                    <!-- Fila 0: Título -->
+                    <Label Grid.Row="0" Content="ERRESERBAK" FontSize="36"
+                           HorizontalAlignment="Center" Margin="0,20,0,10"
+                           FontWeight="Light" Foreground="#CBD5E0" />
+
+                    <!-- Fila 1: DatePicker y RadioButtons -->
+                    <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,10,0,20">
+
+                        <!-- DatePicker -->
+                        <DatePicker x:Name="datePickerReserva"
+                                    SelectedDate="{x:Static sys:DateTime.Today}"
+                                    DisplayDateStart="{x:Static sys:DateTime.Today}"
+                                    DisplayDateEnd="{Binding hogeiFromNow}"
+                                    Width="220"
+                                    FontSize="16"
+                                    Height="40"
+                                    VerticalAlignment="Center"/>
+
+                        <!-- Radio Buttons -->
+                        <RadioButton x:Name="radio_bazkaria" Content="Bazkaria" FontSize="18" Foreground="#E2E8F0" Margin="20" Checked="radio_bazkaria_Checked"/>
+                        <RadioButton x:Name="radio_afaria" Content="Afaria" FontSize="18" Foreground="#E2E8F0" Margin="20" Checked="radio_afaria_Checked"/>
+                    </StackPanel>
+
+                    <!-- Fila 2: Área de Selección de Mesas (Placeholder de 5 Mesas) -->
+                    <Border Grid.Row="2" Background="#4A5568" CornerRadius="8" Margin="10">
+                        <Grid x:Name="gridaMahaiena">
+                            <!-- Hutsik, mahaiak jarriko ditut kodigotik-->
+                        </Grid>
+                    </Border>
+
+                    <!-- Fila 3: Botón de Acción y Estado -->
+                    <Grid Grid.Row="3" Margin="10">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+
+                        <Button Grid.Column="0" Content="Erreserbatu" Height="45"
+                                Background="#38A169" HorizontalAlignment="Right" Width="200"/>
+
+                        <Label Grid.Column="1" Content="Erreserba eginda" Foreground="#68D391" FontSize="18" FontWeight="SemiBold" 
+                               Visibility="Collapsed" VerticalAlignment="Center" Margin="10,0,0,0"/>
+                    </Grid>
+                </Grid>
+
+                <!-- Kudeaketa -->
+                <Grid x:Name="GestionView" Visibility="Collapsed">
+                    <TextBlock Text="VISTA DE GESTIÓN (Kudeaketa)" FontSize="36" 
+                               FontWeight="Light" Foreground="#CBD5E0" 
+                               HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                </Grid>
+            </Grid>
+        </Border>
     </Grid>
 </Window>
