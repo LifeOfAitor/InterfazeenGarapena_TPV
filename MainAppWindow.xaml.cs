@@ -39,9 +39,12 @@ namespace erronkaTPVsistema
             datePickerReserva.SelectedDate = DateTime.Today;
         }
 
+        // ateratzerakoan LOGIN lehiora bueltatzen da
         private void Button_Exit_Click(object sender, RoutedEventArgs e)
         {
-            Application.Current.Shutdown();
+            Window window = new MainWindow();
+            window.Show();
+            this.Close();
         }
 
         private void Button_Reservas_Click(object sender, RoutedEventArgs e)

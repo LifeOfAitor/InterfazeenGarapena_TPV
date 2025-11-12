@@ -41,32 +41,35 @@
             </StackPanel>
 
             <Button Grid.Row="2" Content="Atera"
-                    Background="#E53E3E" Margin="10,10,10,20"
-                    Click="Button_Exit_Click"/>
+                    Background="#E53E3E"
+                    Click="Button_Exit_Click"
+                    Padding="20"
+                    Margin="20"/>
 
         </Grid>
 
         <!-- kontenido printzipala hemen(75%) -->
         <Border Grid.Column="1" Background="#3D4B5D" CornerRadius="15" Margin="5" Padding="10">
             <Grid>
-                <Grid x:Name="ReservasView" Visibility="Visible">
+                <!-- erreserbak hemen-->
+                <Grid x:Name="ReservasView" Visibility="Collapsed">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
-                        <!-- 0: Título -->
+                        <!-- 0: izenburua -->
                         <RowDefinition Height="Auto"/>
-                        <!-- 1: Fecha y Txanda (Comida/Cena) -->
+                        <!-- 1: data eta janorduak -->
                         <RowDefinition Height="*"/>
-                        <!-- 2: Mesas (Area flexible) -->
+                        <!-- 2: Mahaiak -->
                         <RowDefinition Height="Auto"/>
-                        <!-- 3: Botón de Acción/Estado -->
+                        <!-- 3: Erreserba botoia -->
                     </Grid.RowDefinitions>
 
-                    <!-- Fila 0: Título -->
+                    <!-- Fila 0: izenburua -->
                     <Label Grid.Row="0" Content="ERRESERBAK" FontSize="36"
                            HorizontalAlignment="Center" Margin="0,20,0,10"
                            FontWeight="Light" Foreground="#CBD5E0" />
 
-                    <!-- Fila 1: DatePicker y RadioButtons -->
+                    <!-- Fila 1: data eta janorduak -->
                     <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,10,0,20">
 
                         <!-- DatePicker -->
@@ -85,7 +88,7 @@
                         <RadioButton x:Name="radio_afaria" Content="Afaria" FontSize="18" Foreground="#E2E8F0" Margin="20" Checked="radio_afaria_Checked"/>
                     </StackPanel>
 
-                    <!-- Fila 2: Área de Selección de Mesas (Placeholder de 5 Mesas) -->
+                    <!-- Fila 2: mahaiak -->
                     <Border Grid.Row="2" Background="#4A5568" CornerRadius="8" Margin="10">
                         <Grid x:Name="gridaMahaiena" HorizontalAlignment="Center" VerticalAlignment="Center">
                             <Grid.RowDefinitions>
@@ -101,7 +104,7 @@
                         </Grid>
                     </Border>
 
-                    <!-- Fila 3: Botón de Acción y Estado -->
+                    <!-- Fila 3: erreserba botoia -->
                     <Grid Grid.Row="3" Margin="10">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*"/>
@@ -110,17 +113,12 @@
 
                         <Button x:Name="btn_erreserbatu" Grid.Column="0" Content="Erreserbatu" Height="45"
                                 Background="#38A169" HorizontalAlignment="Left" Width="200" Margin="500,0,0,0" VerticalAlignment="Top" Click="btn_erreserbatu_Click"/>
-
-                        <Label Grid.Column="1" Content="Erreserba eginda" Foreground="#68D391" FontSize="18" FontWeight="SemiBold" 
-                               Visibility="Collapsed" VerticalAlignment="Center" Margin="10,0,0,0"/>
                     </Grid>
                 </Grid>
 
                 <!-- Kudeaketa -->
-                <Grid x:Name="GestionView" Visibility="Collapsed">
-                    <TextBlock Text="VISTA DE GESTIÓN (Kudeaketa)" FontSize="36" 
-                               FontWeight="Light" Foreground="#CBD5E0" 
-                               HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                <Grid x:Name="GestionView" Visibility="Visible">
+                    
                 </Grid>
             </Grid>
         </Border>
