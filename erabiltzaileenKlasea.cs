@@ -329,5 +329,39 @@ namespace erronkaTPVsistema
             }
         }
 
+        public static void erreserbatuMahaiak(string aukeratutakoMahaiak, string erabiltzailea, DateTime? erreserbadata, string noiz)
+        {
+            List<string> mahaiak = aukeratutakoMahaiak.Split(' ').ToList();
+            if (dataSource == null)
+            {
+                MessageBox.Show("Ez dago konexiorik sortuta");
+            }
+            if (erreserbadata == null)
+            {
+                MessageBox.Show("Data ez da zuzena");
+                return;
+            }
+            foreach (string s in mahaiak)
+            {
+                const string query = "INSERT INTO erreserbak (mahaizenbakia, data, noiz, erabiltzailea) VALUES (@s, @erreserbadata, @noiz::erreserbanoiz, @erabiltzailea)";
+                try
+                {
+                    using var conn = dataSource.OpenConnection(); // datu basera konektatzen da
+                    using var cmd = new NpgsqlCommand(query, conn);
+                    cmd.Parameters.AddWithValue("@s", Int32.Parse(s));
+                    cmd.Parameters.AddWithValue("@erreserbadata", erreserbadata.Value.Date);
+                    cmd.Parameters.AddWithValue("@noiz", noiz);
+                    cmd.Parameters.AddWithValue("@erabiltzailea", erabiltzailea);
+                    cmd.ExecuteNonQuery();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Errorea erreserba sartzerakoan: {ex.Message}");
+                }
+            }
+            
+
+        }
+
     }
 }

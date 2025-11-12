@@ -21,6 +21,7 @@ namespace erronkaTPVsistema
     /// </summary>
     public partial class MainAppWindow : Window
     {
+        string erabiltzailea;
         const int MAHAIKOPURUA = 5;
         public DateTime hogeiFromNow { get; set; }
 
@@ -29,6 +30,7 @@ namespace erronkaTPVsistema
         {
             InitializeComponent();
             this.Title = $"{erabiltzailea} menua";
+            this.erabiltzailea = erabiltzailea ;
 
             //Erreserbak egiteko
             hogeiFromNow = DateTime.Today.AddDays(20); //erreserbak bakarrik egin daitezke gaurtik 20 egunera
@@ -102,5 +104,41 @@ namespace erronkaTPVsistema
             }
         }
 
+        //datubasean gordetzen du erreserba bat ezarritako mahai edo mahaiekin logeatuta dagoen erabiltzailearentzako
+        private void btn_erreserbatu_Click(object sender, RoutedEventArgs e)
+        {
+           var aukeratuta = checkAukeratutakoMahaiak();
+            if (aukeratuta.Length == 0)
+            {
+                MessageBox.Show("Ez dago mahairik aukeratuta");
+            }
+            else
+            {
+                if (radio_bazkaria.IsChecked == true)
+                {
+                    erabiltzaileenKlasea.erreserbatuMahaiak(aukeratuta, erabiltzailea, datePickerReserva.SelectedDate.Value, "janaria");
+                    MessageBox.Show($"{erabiltzailea}k sortu du erreserba. {aukeratuta} | {datePickerReserva.SelectedDate.Value.Date} | janarirako");
+                }
+                else
+                {
+                    erabiltzaileenKlasea.erreserbatuMahaiak(aukeratuta, erabiltzailea, datePickerReserva.SelectedDate.Value.Date, "afaria");
+                    MessageBox.Show($"{erabiltzailea}k sortu du erreserba. {aukeratuta} | {datePickerReserva.SelectedDate.Value} | afarirako");
+                }
+                gridaMahaiena.Children.Clear();
+                radio_bazkaria.IsChecked = false;
+                radio_afaria.IsChecked = false;
+                
+            }
+        }
+
+        // erreserbatutako botoiari ematean zein Mahai aukeratuta dauden bueltatuko digu string batean
+        private string checkAukeratutakoMahaiak()
+        {
+            var seleccionados = gridaMahaiena.Children
+            .OfType<TPV_Mahaia>()
+            .Where(s => s.Mahaia.Estado == EstadoMesa.Seleccionado)
+            .Select(s => s.Mahaia.NumeroMesa.ToString());
+            return string.Join(" ", seleccionados);
+        }
     }
 }
