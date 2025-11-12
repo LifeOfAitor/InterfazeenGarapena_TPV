@@ -286,5 +286,48 @@ namespace erronkaTPVsistema
                 MessageBox.Show($"Errorea stocka aldatzerakoan: {ex.Message}");
             }
         }
+
+        //bazkari edo afarirako erreserbak kargatzea
+        public static List<Erreserba> kargatuErreserbak(string noizin, DateTime? erreserbadatain)
+        {
+            List<Erreserba> erreserbak = new List<Erreserba>();
+            if (dataSource == null)
+            {
+                MessageBox.Show("Ez dago konexiorik sortuta");
+                return erreserbak;
+            }
+
+            if (erreserbadatain == null)
+            {
+                MessageBox.Show("Data ez da zuzena");
+                return erreserbak;
+            }
+
+            const string query = "SELECT mahaizenbakia, data, noiz FROM erreserbak WHERE data = @erreserbadata AND noiz = @noiz::erreserbanoiz";
+            try
+            {
+                using var conn = dataSource.OpenConnection();
+                using var cmd = new NpgsqlCommand(query, conn);
+                cmd.Parameters.AddWithValue("@erreserbadata", erreserbadatain.Value.Date);
+                cmd.Parameters.AddWithValue("@noiz", noizin);
+
+                using var reader = cmd.ExecuteReader();
+                while (reader.Read())
+                {
+                    int mahaizenbakia = reader.GetInt32(0);
+                    DateTime erreserbadata = reader.GetDateTime(1);
+                    string noiz = reader.GetString(2);
+                    erreserbak.Add(new Erreserba(mahaizenbakia, erreserbadata, noiz));
+                }
+
+                return erreserbak;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Errorea erreserbak kargatzerakoan: {ex.Message}");
+                return erreserbak;
+            }
+        }
+
     }
 }

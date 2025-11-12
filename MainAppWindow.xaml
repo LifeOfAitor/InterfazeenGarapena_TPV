@@ -77,7 +77,8 @@
                                     Width="220"
                                     FontSize="16"
                                     Height="40"
-                                    VerticalAlignment="Center"/>
+                                    VerticalAlignment="Center"
+                                    SelectedDateChanged="datePickerReserva_SelectedDateChanged"/>
 
                         <!-- Radio Buttons -->
                         <RadioButton x:Name="radio_bazkaria" Content="Bazkaria" FontSize="18" Foreground="#E2E8F0" Margin="20" Checked="radio_bazkaria_Checked"/>
@@ -86,8 +87,17 @@
 
                     <!-- Fila 2: Área de Selección de Mesas (Placeholder de 5 Mesas) -->
                     <Border Grid.Row="2" Background="#4A5568" CornerRadius="8" Margin="10">
-                        <Grid x:Name="gridaMahaiena">
-                            <!-- Hutsik, mahaiak jarriko ditut kodigotik-->
+                        <Grid x:Name="gridaMahaiena" HorizontalAlignment="Center" VerticalAlignment="Center">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
                         </Grid>
                     </Border>
 
