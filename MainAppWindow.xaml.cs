@@ -26,17 +26,24 @@ namespace erronkaTPVsistema
         public DateTime hogeiFromNow { get; set; }
 
         List<Erreserba> erreserbak = new List<Erreserba>();
+
+        List<Produktua> biltegia = null;
+        List<Produktua> TiketarenProduktuak { get; set; } = new List<Produktua>();
         public MainAppWindow(string erabiltzailea)
         {
             InitializeComponent();
-            this.Title = $"{erabiltzailea} menua";
-            this.erabiltzailea = erabiltzailea ;
+            this.Title = $"{erabiltzailea.ToUpper()} menua";
+            this.erabiltzailea = erabiltzailea;
+            txt_erabiltzailea.Text = erabiltzailea.ToUpper();
 
             //Erreserbak egiteko
             hogeiFromNow = DateTime.Today.AddDays(20); //erreserbak bakarrik egin daitezke gaurtik 20 egunera
             DataContext = this;
 
             datePickerReserva.SelectedDate = DateTime.Today;
+
+            //biltegia kargatuko dugu ticketa egiteko momenturako
+            biltegia = erabiltzaileenKlasea.kargatuBiltegia();
         }
 
         // ateratzerakoan LOGIN lehiora bueltatzen da
@@ -52,13 +59,6 @@ namespace erronkaTPVsistema
             // ikusi interesatzen zaigun menua
             GestionView.Visibility = Visibility.Collapsed;
             ReservasView.Visibility = Visibility.Visible;
-        }
-
-        private void Button_Gestion_Click(object sender, RoutedEventArgs e)
-        {
-            // ikusi interesatzen zaigun menua
-            ReservasView.Visibility = Visibility.Collapsed;
-            GestionView.Visibility = Visibility.Visible;
         }
 
         private void radio_bazkaria_Checked(object sender, RoutedEventArgs e)
@@ -89,7 +89,7 @@ namespace erronkaTPVsistema
                 mahaiaUC.Mahaia.NumeroMesa = i + 1;
                 mahaiaUC.Mahaia.Estado = erreserbatuta ? EstadoMesa.Ocupado : EstadoMesa.Libre;
 
-                
+
                 Grid.SetRow(mahaiaUC, i);
                 Grid.SetColumn(mahaiaUC, 0);
 
@@ -101,7 +101,7 @@ namespace erronkaTPVsistema
         {
             if (gridaMahaiena != null)
             {
-                gridaMahaiena.Children.Clear(); 
+                gridaMahaiena.Children.Clear();
                 radio_bazkaria.IsChecked = false;
                 radio_afaria.IsChecked = false;
             }
@@ -110,7 +110,7 @@ namespace erronkaTPVsistema
         //datubasean gordetzen du erreserba bat ezarritako mahai edo mahaiekin logeatuta dagoen erabiltzailearentzako
         private void btn_erreserbatu_Click(object sender, RoutedEventArgs e)
         {
-           var aukeratuta = checkAukeratutakoMahaiak();
+            var aukeratuta = checkAukeratutakoMahaiak();
             if (aukeratuta.Length == 0)
             {
                 MessageBox.Show("Ez dago mahairik aukeratuta");
@@ -130,7 +130,7 @@ namespace erronkaTPVsistema
                 gridaMahaiena.Children.Clear();
                 radio_bazkaria.IsChecked = false;
                 radio_afaria.IsChecked = false;
-                
+
             }
         }
 
@@ -142,6 +142,108 @@ namespace erronkaTPVsistema
             .Where(s => s.Mahaia.Estado == EstadoMesa.Seleccionado)
             .Select(s => s.Mahaia.NumeroMesa.ToString());
             return string.Join(" ", seleccionados);
+        }
+
+        /////////KUDEAKETARAKO METODOAK///////////////
+        private void Button_Gestion_Click(object sender, RoutedEventArgs e)
+        {
+            // ikusi interesatzen zaigun menua
+            ReservasView.Visibility = Visibility.Collapsed;
+            GestionView.Visibility = Visibility.Visible;
+            //kargatu mahaiak comboboxerako
+            int mahaiak = erabiltzaileenKlasea.kargatuMahaiak();
+            //mahaiaren comboboxari ezarri mahaiak
+            for (int i = 1; i <= mahaiak; i++)
+            {
+                mahaia_combo.Items.Add(i.ToString());
+            }
+            //janorduko Comboboxari ezarri datuak
+            janordua_combo.Items.Add("janaria");
+            janordua_combo.Items.Add("afaria");
+            ezarriKategoriak(biltegia);
+
+        }
+
+        private void ezarriKategoriak(List<Produktua> biltegia)
+        {
+            //ezarri kategoriak comboboxean
+            List<string> kategoriakUnikoak = new List<string>();
+            foreach (Produktua produktua in biltegia)
+            {
+                string kategoria = produktua.Kategoria.ToString();
+
+                if (!kategoriakUnikoak.Contains(kategoria))
+                {
+                    kategoriakUnikoak.Add(kategoria);
+                    kategoriak_combo.Items.Add(kategoria);
+                }
+            }
+        }
+
+        private void kategoriak_combo_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            produktuak_combo.Items.Clear();
+            ezarriProduktuak(biltegia, kategoriak_combo.SelectedItem.ToString());
+        }
+
+        private void ezarriProduktuak(List<Produktua> biltegia, string kategoria)
+        {
+            foreach (Produktua produktua in biltegia)
+            {
+                if (produktua.Kategoria.ToString() == kategoria)
+                {
+                    string item = produktua.Izena.ToString();
+                    produktuak_combo.Items.Add(item);
+                }
+                
+            }
+        }
+
+        private void kantitatea_txt_PreviewTextInput(object sender, TextCompositionEventArgs e)
+        {
+            e.Handled = !int.TryParse(e.Text, out _);
+        }
+
+        private void erantsi_Click(object sender, RoutedEventArgs e)
+        {
+            if (string.IsNullOrWhiteSpace(kantitatea_txt.Text) ||
+                !int.TryParse(kantitatea_txt.Text, out int kantitatea) ||
+                kantitatea <= 0)
+            {
+                MessageBox.Show("Sartu zenbaki oso positibo bat kantitate gisa.", "Errorea");
+                kantitatea_txt.Clear();
+                return;
+            }
+
+            eguneratuTiket(kantitatea);
+            kantitatea_txt.Clear();
+        }
+
+        private void eguneratuTiket(int kantitatea)
+        {
+            string izenaAukatua = produktuak_combo.SelectedItem?.ToString();
+
+            if (string.IsNullOrEmpty(izenaAukatua))
+            {
+                MessageBox.Show("Aukeratu produktu bat.", "Errorea", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
+            Produktua aurkituta = biltegia.FirstOrDefault(prod => prod.Izena.Equals(izenaAukatua));
+
+            if (aurkituta == null)
+            {
+                MessageBox.Show("Errorea: Produktua ez da aurkitu biltegian.", "Errorea", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
+            var newItem = new Produktua(aurkituta.Izena, kantitatea, aurkituta.Prezioa * kantitatea);
+
+            TiketarenProduktuak.Add(newItem);
+
+            EskaeraDataGrid.Items.Refresh();
+
+            // kalkulatuKontuTotala(); 
         }
     }
 }

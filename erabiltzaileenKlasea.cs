@@ -2,9 +2,11 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.Metadata.Ecma335;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls.Primitives;
 
 namespace erronkaTPVsistema
 {
@@ -194,7 +196,7 @@ namespace erronkaTPVsistema
                 return biltegia;
             }
 
-            const string query = "SELECT izena, stock FROM produktuak;";
+            const string query = "SELECT izena, stock, kategoria, prezioa FROM produktuak;";
             try
             {
                 using var conn = dataSource.OpenConnection();
@@ -204,8 +206,10 @@ namespace erronkaTPVsistema
                 while (reader.Read())
                 {
                     string izena = reader.GetString(0);
-                    int stock = reader.GetInt32(1); // stock como entero
-                    biltegia.Add(new Produktua(izena, stock));
+                    int stock = reader.GetInt32(1);
+                    string kategoria = reader.GetString(2);
+                    decimal prezioa = reader.GetDecimal(3);
+                    biltegia.Add(new Produktua(izena, stock, kategoria, prezioa));
                 }
             }
             catch (Exception ex)
@@ -359,8 +363,34 @@ namespace erronkaTPVsistema
                     MessageBox.Show($"Errorea erreserba sartzerakoan: {ex.Message}");
                 }
             }
-            
+        }
 
+        public static int kargatuMahaiak()
+        {
+            if (dataSource == null)
+            {
+                MessageBox.Show("Ez dago konexiorik sortuta");
+                return 0;
+            }
+            const string query = "SELECT COUNT(*) FROM mahaiakgoizean";
+            try
+            {
+                using var conn = dataSource.OpenConnection(); // datu basera konektatzen da
+                using var cmd = new NpgsqlCommand(query, conn);
+                using var reader = cmd.ExecuteReader();
+
+                if (reader.Read())
+                {
+                    int erantzuna = reader.GetInt32(0);
+                    return erantzuna;
+                }
+                return 0;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Errorea stocka aldatzerakoan: {ex.Message}");
+                return 0;
+            }
         }
 
     }
