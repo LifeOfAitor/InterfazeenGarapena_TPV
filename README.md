@@ -1,28 +1,38 @@
 ﻿Momentuz honela funtzionatzen du:
-Proiektuaren egitura ordenatu behar da eta oreaindik ez dago bukatuta.
-Datubasearekin lan egiteko badago direktorio bat database izenekoa.
-Bertan egitura hau dauka:
+Proiektuaren egitura oraindik ordenatu behar da eta ez dago bukatuta.
+
+Datubasearekin lan egiteko "database" izeneko direktorio bat dago.
+Hau da proiektuaren egitura:
+
 erronkaTPVsistema/
 ├── database/
-│   ├── postgresql/  # Datu-basearen datuak (bolumena) gordetzeko direktorioa
-│   └── compose.yml  # Docker Compose konfigurazioa
+│   ├── postgresql/   # Datu-basearen datuak (bolumena) gordetzeko direktorioa
+│   └── compose.yml   # Docker Compose konfigurazioa
 └── ... (WPF aplikazioaren kodea)
 
-Docker compose:
+---------------------------------------
+Docker Compose
+---------------------------------------
 
-'''bash
-cd database
-docker compose up
-'''
-    Hemen altxatuko ditugu bi instantzia.
-        - postgresql 5432 portuan:
-            Erabiltzailea "admin"
-            Pasahitza "admin"
-            Datu basearen izena "jatetxea"
-        - adminer 8080 portuan
-            Erabiliko dugu datu baseko datuak sortu/editatu/ezabatu eta kontsultatzeko
-            interfaze grafiko baten bidez.
-''' vim
+Datu-basea eta Adminer altxatzeko:
+
+    cd database
+    docker compose up
+
+Honek bi instantzia altxatuko ditu:
+
+1) PostgreSQL — 5432 portuan
+   - Erabiltzailea: admin
+   - Pasahitza: admin
+   - Datu-basearen izena: jatetxea
+
+2) Adminer — 8080 portuan
+   Datu-baseko datuak sortu, editatu, ezabatu eta kontsultatzeko interfaze grafiko sinple bat.
+
+---------------------------------------
+compose.yml edukia
+---------------------------------------
+
 services:
 
   db:
@@ -31,19 +41,16 @@ services:
     restart: always
     shm_size: 128mb
     ports:
-      - 5432:5432
-    
+      - "5432:5432"
     volumes:
-    - ./postgresql:/var/lib/postgresql
-
+      - ./postgresql:/var/lib/postgresql
     environment:
-        POSTGRES_USER: admin 
-        POSTGRES_PASSWORD: admin
-        POSTGRES_DB: jatetxea
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin
+      POSTGRES_DB: jatetxea
 
   adminer:
     image: adminer
     restart: always
     ports:
-      - 8080:8080
-'''
+      - "8080:8080"
