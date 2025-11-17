@@ -1,6 +1,4 @@
-﻿CREATE DATABASE "jatetxea";
-
-DROP TYPE IF EXISTS "erabiltzaile_mota";;
+﻿DROP TYPE IF EXISTS "erabiltzaile_mota";;
 CREATE TYPE "erabiltzaile_mota" AS ENUM ('admin', 'user');
 
 DROP TYPE IF EXISTS "mahaiegoera";;
