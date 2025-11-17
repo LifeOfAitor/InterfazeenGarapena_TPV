@@ -1,5 +1,4 @@
 ﻿CREATE DATABASE "jatetxea";
-\connect "jatetxea";
 
 DROP TYPE IF EXISTS "erabiltzaile_mota";;
 CREATE TYPE "erabiltzaile_mota" AS ENUM ('admin', 'user');
