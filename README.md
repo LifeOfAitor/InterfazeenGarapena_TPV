@@ -54,7 +54,8 @@ Datubasearekin lan egiteko **database** izeneko direktorio bat dago.
     erronkaTPVsistema/
     ├── database/
     │   ├── postgresql/        # Datu-basearen datuak (bolumena) gordetzeko direktorioa
-    │   └── compose.yml        # Docker Compose konfigurazioa
+    │   ├── compose.yml    
+    │   └──initdb.sql          # Datu-basea aplikazioa lehenengo aldiz irekitzean datuak sartzeko skripta
     └── ... (WPF aplikazioaren kodea)
 
 ------------------------------------------------------------------------
@@ -87,15 +88,15 @@ services:
     shm_size: 128mb
     ports:
       - 5432:5432
-
+    
     volumes:
-      - ./postgresql:/var/lib/postgresql
-      - ./initdb:/docker-entrypoint-initdb.d # datubasea inizializatzeko eta datuak sartzeko
+    - ./initdb.sql:/docker-entrypoint-initdb.d/initdb.sql #datubasea inizializatzeko eta datuak sartzeko
+    - ./postgresql:/var/lib/postgresql
 
     environment:
-      POSTGRES_USER: admin      # datubasearen erabiltzailea
-      POSTGRES_PASSWORD: admin  # datubasearen pasahitza
-      POSTGRES_DB: jatetxea     # datubasearen izena
+        POSTGRES_USER: admin #datubasearen erabiltzailea
+        POSTGRES_PASSWORD: admin #datubasearen pasahitza
+        POSTGRES_DB: jatetxea #datubasearen izena
 
   adminer:
     image: adminer
