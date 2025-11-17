@@ -10,11 +10,12 @@ services:
     
     volumes:
     - ./postgresql:/var/lib/postgresql
+    - ./initdb:/docker-entrypoint-initdb.d #datubasea inizializatzeko eta datuak sartzeko
 
     environment:
-        POSTGRES_USER: admin 
-        POSTGRES_PASSWORD: admin
-        POSTGRES_DB: jatetxea
+        POSTGRES_USER: admin #datubasearen erabiltzailea
+        POSTGRES_PASSWORD: admin #datubasearen pasahitza
+        POSTGRES_DB: jatetxea #datubasearen izena
 
   adminer:
     image: adminer

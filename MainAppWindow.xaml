@@ -117,7 +117,7 @@
                 </Grid>
                 
                 <!-- kudeaketa-->
-                <Grid x:Name="GestionView" Visibility="Visible" Margin="10">
+                <Grid x:Name="GestionView" Visibility="Collapsed" Margin="10">
 
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
@@ -200,7 +200,7 @@
                                         <DataGridTextColumn Header="Produktua" Binding="{Binding Izena}" 
                                     Width="2*"/>
                                         <DataGridTextColumn Header="Kantitatea" Binding="{Binding HautatutakoKantitatea}" Width="*"/>
-                                        <DataGridTextColumn Header="Prezioa" Binding="{Binding Prezioa, StringFormat='C2'}" Width="*"/>
+                                        <DataGridTextColumn Header="Prezioa" Binding="{Binding Prezioa}" Width="*"/>
 
                                     </DataGrid.Columns>
                                 </DataGrid>
@@ -213,7 +213,7 @@
                                         <TextBox x:Name="kontu_totala_txt" Text="{Binding KontuTotala, StringFormat='C2'}"  Width="150" IsReadOnly="True" TextAlignment="Right" FontWeight="Bold"/>
                                     </StackPanel>
 
-                                    <Button Content="Tiketa inprimatu" Margin="0,10,0,0"/>
+                                    <Button x:Name="btn_ordainketa" Content="Tiketa inprimatu" Margin="0,10,0,0" Click="btn_ordainketa_Click"/>
                                 </StackPanel>
 
                             </Grid>

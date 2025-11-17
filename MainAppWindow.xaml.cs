@@ -1,6 +1,7 @@
 ﻿using erronkaTPVsistema;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -21,28 +22,29 @@ namespace erronkaTPVsistema
     /// </summary>
     public partial class MainAppWindow : Window
     {
-        string erabiltzailea;
-        const int MAHAIKOPURUA = 5;
-        public DateTime hogeiFromNow { get; set; }
+        string erabiltzailea; //aplikazioaren erabiltzailea
+        public DateTime hogeiFromNow { get; set; }  //hemendik 20 egunera data
 
-        List<Erreserba> erreserbak = new List<Erreserba>();
+        List<Erreserba> erreserbak = new List<Erreserba>(); // erreserbak kargatzeko listan
 
-        List<Produktua> biltegia = null;
-        List<Produktua> TiketarenProduktuak { get; set; } = new List<Produktua>();
+        List<Produktua> biltegia = null;  //biltegia kargatzeko listan
+        //tiketan dauden produktuen lista, ObservableCollection da Datagrid-a eguneratzeko automatikoki, refresh() ez egiteko
+        public ObservableCollection<Produktua> TiketarenProduktuak { get; set; } = new ObservableCollection<Produktua>(); 
+
+        decimal kontuTotala = 0; // kontutotala kontsumitutako produktu kantitateen arabera
         public MainAppWindow(string erabiltzailea)
         {
             InitializeComponent();
+            DataContext = this;
             this.Title = $"{erabiltzailea.ToUpper()} menua";
             this.erabiltzailea = erabiltzailea;
             txt_erabiltzailea.Text = erabiltzailea.ToUpper();
 
             //Erreserbak egiteko
             hogeiFromNow = DateTime.Today.AddDays(20); //erreserbak bakarrik egin daitezke gaurtik 20 egunera
-            DataContext = this;
-
             datePickerReserva.SelectedDate = DateTime.Today;
 
-            //biltegia kargatuko dugu ticketa egiteko momenturako
+            //biltegia kargatuko dugu behar dugun momentuetan kontsultatzeko
             biltegia = erabiltzaileenKlasea.kargatuBiltegia();
         }
 
@@ -54,6 +56,7 @@ namespace erronkaTPVsistema
             this.Close();
         }
 
+        /////////ERRESERBEN METODOAK///////////////
         private void Button_Reservas_Click(object sender, RoutedEventArgs e)
         {
             // ikusi interesatzen zaigun menua
@@ -63,14 +66,14 @@ namespace erronkaTPVsistema
 
         private void radio_bazkaria_Checked(object sender, RoutedEventArgs e)
         {
-            gridaMahaiena.Children.Clear(); // limpiar grid
+            gridaMahaiena.Children.Clear(); // mahaien grida garbitu
             erreserbak = erabiltzaileenKlasea.kargatuErreserbak("janaria", datePickerReserva.SelectedDate.Value);
             mahaiakEzarri(erreserbak);
         }
 
         private void radio_afaria_Checked(object sender, RoutedEventArgs e)
         {
-            gridaMahaiena.Children.Clear(); // limpiar grid
+            gridaMahaiena.Children.Clear(); // mahaien grida garbitu
             erreserbak = erabiltzaileenKlasea.kargatuErreserbak("afaria", datePickerReserva.SelectedDate.Value);
             mahaiakEzarri(erreserbak);
         }
@@ -78,8 +81,8 @@ namespace erronkaTPVsistema
         //kargatu behar ditu ezarritako egunerako dauden erreserbak radio botoiko aukeraren arabera
         private void mahaiakEzarri(List<Erreserba> erreserbak)
         {
-            gridaMahaiena.Children.Clear(); // limpiar grid
-            int guztiraMahaiak = 5;
+            gridaMahaiena.Children.Clear(); // mahaien grida garbitu
+            int guztiraMahaiak = 5; // lokaleko mahai kopurua
 
             for (int i = 0; i < guztiraMahaiak; i++)
             {
@@ -97,6 +100,7 @@ namespace erronkaTPVsistema
             }
         }
 
+        // hautatutako data aldatzean garbituko dira elementuak
         private void datePickerReserva_SelectedDateChanged(object sender, SelectionChangedEventArgs e)
         {
             if (gridaMahaiena != null)
@@ -117,15 +121,32 @@ namespace erronkaTPVsistema
             }
             else
             {
-                if (radio_bazkaria.IsChecked == true)
+                if (radio_bazkaria.IsChecked == true) //bazkarirako + konfirmazio mezua
                 {
                     erabiltzaileenKlasea.erreserbatuMahaiak(aukeratuta, erabiltzailea, datePickerReserva.SelectedDate.Value, "janaria");
-                    MessageBox.Show($"{erabiltzailea}k sortu du erreserba. {aukeratuta} | {datePickerReserva.SelectedDate.Value.Date} | janarirako");
+                    MessageBox.Show(
+                                    $"===== ERRESERBA =====\n" +
+                                    $"Erabiltzailea: {erabiltzailea.ToUpper()}\n" +
+                                    $"Mahaiak: {aukeratuta}\n" +
+                                    $"Eguna: {datePickerReserva.SelectedDate:dd/MM/yyyy}\n" +
+                                    $"Janordua: janaria\n" +
+                                    $"=====================",
+                                    "Erreserba sortuta"
+                                     );
+
                 }
-                else
+                else // afarirako + konfirmazio mezua
                 {
                     erabiltzaileenKlasea.erreserbatuMahaiak(aukeratuta, erabiltzailea, datePickerReserva.SelectedDate.Value.Date, "afaria");
-                    MessageBox.Show($"{erabiltzailea}k sortu du erreserba. {aukeratuta} | {datePickerReserva.SelectedDate.Value} | afarirako");
+                    MessageBox.Show(
+                                    $"===== ERRESERBA =====\n" +
+                                    $"Erabiltzailea: {erabiltzailea.ToUpper()}\n" +
+                                    $"Mahaiak: {aukeratuta}\n" +
+                                    $"Eguna: {datePickerReserva.SelectedDate:dd/MM/yyyy}\n" +
+                                    $"Janordua: afaria\n" +
+                                    $"=====================",
+                                    "Erreserba sortuta"
+                                     );
                 }
                 gridaMahaiena.Children.Clear();
                 radio_bazkaria.IsChecked = false;
@@ -150,6 +171,8 @@ namespace erronkaTPVsistema
             // ikusi interesatzen zaigun menua
             ReservasView.Visibility = Visibility.Collapsed;
             GestionView.Visibility = Visibility.Visible;
+            mahaia_combo.Items.Clear();
+            janordua_combo.Items.Clear ();
             //kargatu mahaiak comboboxerako
             int mahaiak = erabiltzaileenKlasea.kargatuMahaiak();
             //mahaiaren comboboxari ezarri mahaiak
@@ -164,13 +187,16 @@ namespace erronkaTPVsistema
 
         }
 
+        // kategoriak comboboxean datubasean dauden kategoria guztiak insertatzen ditu
         private void ezarriKategoriak(List<Produktua> biltegia)
         {
-            //ezarri kategoriak comboboxean
+            kategoriak_combo.Items.Clear(); // garbitu lehenengo
+
+            //kategoriak ezarri comboboxean
             List<string> kategoriakUnikoak = new List<string>();
             foreach (Produktua produktua in biltegia)
             {
-                string kategoria = produktua.Kategoria.ToString();
+                string kategoria = produktua.Kategoria;
 
                 if (!kategoriakUnikoak.Contains(kategoria))
                 {
@@ -180,12 +206,20 @@ namespace erronkaTPVsistema
             }
         }
 
+
+        // kategorien comboboxeko kateoria bat aukeratzen dugunean, kategoria horretako produktuak kargatuko ditu produktuak_combo comboboxean
         private void kategoriak_combo_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             produktuak_combo.Items.Clear();
-            ezarriProduktuak(biltegia, kategoriak_combo.SelectedItem.ToString());
+
+            if (kategoriak_combo.SelectedItem != null)
+            {
+                ezarriProduktuak(biltegia, kategoriak_combo.SelectedItem.ToString());
+            }
         }
 
+
+        // ezarritako kategoriaren arabera produktuen comboboxean ezarriko ditu bere produktuak
         private void ezarriProduktuak(List<Produktua> biltegia, string kategoria)
         {
             foreach (Produktua produktua in biltegia)
@@ -199,11 +233,13 @@ namespace erronkaTPVsistema
             }
         }
 
+        // bakarrik zenbaki osoak sartu ahal izateko kantitatean
         private void kantitatea_txt_PreviewTextInput(object sender, TextCompositionEventArgs e)
         {
             e.Handled = !int.TryParse(e.Text, out _);
         }
 
+        // datagridean sartuko du guk ezarritako produktua eta bere kantitatea
         private void erantsi_Click(object sender, RoutedEventArgs e)
         {
             if (string.IsNullOrWhiteSpace(kantitatea_txt.Text) ||
@@ -214,18 +250,19 @@ namespace erronkaTPVsistema
                 kantitatea_txt.Clear();
                 return;
             }
-
-            eguneratuTiket(kantitatea);
+            eguneratuTiket(kantitatea); // hemen kudeatzen du datagrid-a
             kantitatea_txt.Clear();
         }
 
+
+        // datagridan eransten du gure selekzioa
         private void eguneratuTiket(int kantitatea)
         {
             string izenaAukatua = produktuak_combo.SelectedItem?.ToString();
 
             if (string.IsNullOrEmpty(izenaAukatua))
             {
-                MessageBox.Show("Aukeratu produktu bat.", "Errorea", MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show("Aukeratu produktu bat.", "Errorea");
                 return;
             }
 
@@ -233,17 +270,65 @@ namespace erronkaTPVsistema
 
             if (aurkituta == null)
             {
-                MessageBox.Show("Errorea: Produktua ez da aurkitu biltegian.", "Errorea", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show("Produktua ez da aurkitu biltegian.", "Errorea");
                 return;
             }
 
-            var newItem = new Produktua(aurkituta.Izena, kantitatea, aurkituta.Prezioa * kantitatea);
+            decimal prezioOsoa = aurkituta.Prezioa * kantitatea;
 
+            // Produktua klasearen bigarren konstruktorea erabiltzen dugu kasu honetan
+            var newItem = new Produktua(
+                aurkituta.Izena,
+                kantitatea,
+                prezioOsoa
+            );
             TiketarenProduktuak.Add(newItem);
 
-            EskaeraDataGrid.Items.Refresh();
-
-            // kalkulatuKontuTotala(); 
+            // eguneratu kontu totalaren kantitatea textboxean produktu bat sartzen den bakoitzean
+            kontuTotala += prezioOsoa;
+            kontu_totala_txt.Text = kontuTotala.ToString();
         }
+
+
+        //ordainketa egiterakoan, tiketa gordeko da datu basean eta kontsumitutako produktuen stocka murriztuko da.
+        private void btn_ordainketa_Click(object sender, RoutedEventArgs e)
+        {
+            string tiketa = SortuTiketa();
+            MessageBox.Show(tiketa, "Tiketa");
+            // garbitu elementu guztiak
+            mahaia_combo.Items.Clear();
+            janordua_combo.Items.Clear();
+            kategoriak_combo.Items.Clear();
+            kontu_totala_txt.Clear();
+            TiketarenProduktuak.Clear();
+            kontuTotala = 0;
+        }
+
+        // string bat sortzen da tiketeko elementuekin
+        private string SortuTiketa()
+        {
+            StringBuilder sb = new StringBuilder();
+
+            sb.AppendLine("===== TIKETA =====");
+
+            string mahaia = mahaia_combo.SelectedItem?.ToString() ?? "—";
+            string janordua = janordua_combo.SelectedItem?.ToString() ?? "—";
+
+            sb.AppendLine($" Mahaia: {mahaia}   Janordua: {janordua}");
+            sb.AppendLine();
+
+            foreach (var prod in TiketarenProduktuak)
+            {
+                sb.AppendLine($"{prod.Izena}  x{prod.HautatutakoKantitatea}  →  {prod.Prezioa:C2}");
+            }
+
+            sb.AppendLine();
+            sb.AppendLine($"GUZTIRA: {kontuTotala:C2}");
+            sb.AppendLine("==================");
+
+            return sb.ToString();
+        }
+
+
     }
 }

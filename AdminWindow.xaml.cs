@@ -19,8 +19,8 @@ namespace erronkaTPVsistema
     /// </summary>
     public partial class AdminWindow : Window
     {
-        List<string> erabiltzaileak = null;
-        List<Produktua> biltegia = null;
+        List<string> erabiltzaileak = null; // datubaseko erabiltzaileak kargatzen ditu ('user') motakoak
+        List<Produktua> biltegia = null; // biltegi osoa kargatzen du
 
         public AdminWindow()
         {
@@ -49,6 +49,7 @@ namespace erronkaTPVsistema
             BtnEzabatuErabiltzailea.Visibility = Visibility.Hidden;
         }
 
+        // erabiltzaile berriak sortuko ditugu hemendik (lehio bat sortzen du horretarako)
         private void SortuErabiltzailea_Click(object sender, RoutedEventArgs e)
         {
             Window sortuErabiltzaileaWindow = new sortu_editatu("sortu", erabiltzaileak, null);
@@ -58,7 +59,8 @@ namespace erronkaTPVsistema
             ListBoxErabiltzaileak.Items.Clear();
             erakutsiErabiltzaileak();
         }
-
+        
+        // biltegia listan ikusteko
         private void BegiratuBiltegia_Click(object sender, RoutedEventArgs e)
         {
             ErabiltzaileakGrid.Visibility = Visibility.Hidden;
@@ -70,6 +72,8 @@ namespace erronkaTPVsistema
             BtnEzabatuProduktua.Visibility = Visibility.Hidden;
         }
 
+
+        // erabiltzailearen pasahitza aldatu ahal izango dugu erabiltzailea sortzeko menu berdinetik
         private void AldatuErabiltzailea_Click(object sender, RoutedEventArgs e)
         {
             string erabiltzailea = ListBoxErabiltzaileak.SelectedItem.ToString().Trim();
@@ -81,6 +85,7 @@ namespace erronkaTPVsistema
             erakutsiErabiltzaileak();
         }
 
+        // haukeratutako erabiltzailea ezabatuko dugu
         private void EzabatuErabiltzailea_Click(object sender, RoutedEventArgs e)
         {
             // Usar el nuevo nombre del botón
@@ -94,6 +99,7 @@ namespace erronkaTPVsistema
             }
         }
 
+        // ezarritako produktuaren stoka aldatuko dugu
         private void AldatuStocka_Click(object sender, RoutedEventArgs e)
         {
             // Hautatutako aukera egiaztatu ea Produktua klasekoa den
@@ -134,6 +140,7 @@ namespace erronkaTPVsistema
             }
         }
 
+        // produktuak ezabatuko ditugu hemendik
         private void EzabatuProduktua_Click(object sender, RoutedEventArgs e)
         {
             //hautatutako aukera egiaztatu ea Produktua klasekoa den

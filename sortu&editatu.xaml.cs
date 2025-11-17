@@ -17,6 +17,8 @@ namespace erronkaTPVsistema
     /// <summary>
     /// Interaction logic for sortu_editatu.xaml
     /// </summary>
+    
+    // erabiltzaileak sortzeko edo editatzeko erabiliko dugu klase hau. Window bat da. Ezartzen diogun moduaren arabera egingo du gauza bat edo bestea.
     public partial class sortu_editatu : Window
     {
         string modua = null;
@@ -30,10 +32,10 @@ namespace erronkaTPVsistema
             {
                 txtbox_izena.Text = erabiltzailea;
                 txtbox_izena.IsReadOnly = true; // izena ez da aldatzen hasieran
-                // pasahitza ez da aldatzen hasieran
             }
         }
 
+        // erabiltzaile izena existitzen den konprobatuko dugu hemendik, ez errepikatzeko
         private bool konprobatuErabiltzailea()
         {
             foreach (string izena in erabiltzaileak)
@@ -48,6 +50,7 @@ namespace erronkaTPVsistema
             return true;
         }
 
+        // ezarri dugun erabiltzailea datu basean gordeko dugu hemendik
         private void btn_gorde_Click(object sender, RoutedEventArgs e)
         {
             if (txtbox_izena.Text == "" || txtbox_pasahitza.Text == "")
@@ -74,6 +77,7 @@ namespace erronkaTPVsistema
 
         }
 
+        // klasea funtzionatzeko bakarrik, kasurik ez egin (errorea ematen du bestela)
         private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
 

@@ -18,6 +18,8 @@ namespace erronkaTPVsistema
     /// <summary>
     /// Interaction logic for TPV_Mahaia.xaml
     /// </summary>
+    
+    // guk sortutako elementua. Usercontroll bat da, bere konportamendua kudeatzen da hemendik, hau da, kolorea eta egoera aldatzen da eta konstruktorea ezartzen da
     public partial class TPV_Mahaia : UserControl
     {
         public Mahaia Mahaia{ get; set; }

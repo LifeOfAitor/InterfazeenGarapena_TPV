@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace erronkaTPVsistema
 {
-    // Biltegiko produktu bakoitza kargatzen denean bere informazioa gordeku dugun klase edo obj
-    internal class Produktua
+    // AdminWindowra biltegiko produktu bakoitza kargatzen denean bere informazioa gordeku dugun klase edo obj
+    public class Produktua
     {
         public string Izena { get; set; }
         public int Stock { get; set; }
@@ -18,6 +18,7 @@ namespace erronkaTPVsistema
 
         public int HautatutakoKantitatea { get; set; }
 
+        // MainAppWindoweko datagrida erakusteko beste konstruktore bat prestatuko dugu.
         public Produktua(string izena, int stock, string kategoria, decimal prezioa)
         {
             Izena = izena;

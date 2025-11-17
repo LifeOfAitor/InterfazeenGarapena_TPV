@@ -1,38 +1,83 @@
-﻿Momentuz honela funtzionatzen du:
-Proiektuaren egitura oraindik ordenatu behar da eta ez dago bukatuta.
+﻿# Aplikazioaren funtzionamendua
 
-Datubasearekin lan egiteko "database" izeneko direktorio bat dago.
-Hau da proiektuaren egitura:
+## 1. Docker altxatu
 
-erronkaTPVsistema/
-├── database/
-│   ├── postgresql/   # Datu-basearen datuak (bolumena) gordetzeko direktorioa
-│   └── compose.yml   # Docker Compose konfigurazioa
-└── ... (WPF aplikazioaren kodea)
+``` bash
+cd database
+docker-compose up
+```
 
----------------------------------------
-Docker Compose
----------------------------------------
+-   Dockerrak **Adminer** altxatuko du **8080** portuan datuak ikusi eta
+    aldatzeko
+    -   **User:** admin\
+    -   **Pass:** admin\
+    -   **Datu-basearen izena:** jatetxea
 
-Datu-basea eta Adminer altxatzeko:
+------------------------------------------------------------------------
 
-    cd database
-    docker compose up
+## 2. Datu basera konektatzeko behar dena
 
-Honek bi instantzia altxatuko ditu:
+Aplikazioak PostgreSQL-era konektatzeko **Npgsql** instalatu behar da.
 
-1) PostgreSQL — 5432 portuan
-   - Erabiltzailea: admin
-   - Pasahitza: admin
-   - Datu-basearen izena: jatetxea
+-   **NuGet Package Manager** bidez instala daiteke.
+    -   Komandoa:
 
-2) Adminer — 8080 portuan
-   Datu-baseko datuak sortu, editatu, ezabatu eta kontsultatzeko interfaze grafiko sinple bat.
+            NuGet\Install-Package Npgsql -Version 9.0.4
 
----------------------------------------
-compose.yml edukia
----------------------------------------
+    -   Web orria: https://www.nuget.org/packages/Npgsql/
 
+------------------------------------------------------------------------
+
+## 3. Aplikazioa exekutatu
+
+### 3.1 Login lehioa
+
+-   Bi aukera daude probatzeko: **admin** edo **pepe**
+-   Erabiltzaile motaren arabera, akzio ezberdinak kudeatuko dira.
+
+### 3.2 Admin lehioa
+
+-   Erabiltzaileak kudeatu (gehitu, editatu, ezabatu)
+-   Biltegia kudeatu (produktuak ezabatu, stocka aldatu)
+
+### 3.3 User lehioa
+
+-   Erreserbak kudeatu (sortu)
+-   Tiketak egin eta ikusi
+
+------------------------------------------------------------------------
+
+# Proiektuaren egitura
+
+Datubasearekin lan egiteko **database** izeneko direktorio bat dago.
+
+    erronkaTPVsistema/
+    ├── database/
+    │   ├── postgresql/        # Datu-basearen datuak (bolumena) gordetzeko direktorioa
+    │   └── compose.yml        # Docker Compose konfigurazioa
+    └── ... (WPF aplikazioaren kodea)
+
+------------------------------------------------------------------------
+
+# Docker Compose
+
+## 1) PostgreSQL --- 5432 portuan
+
+-   **Erabiltzailea:** admin\
+-   **Pasahitza:** admin\
+-   **Datu-basearen izena:** jatetxea\
+-   Altxatzean **initdb.sql** scriptak datu-basea populatzen du.
+
+## 2) Adminer --- 8080 portuan
+
+Datu-baseko datuak sortu, editatu, ezabatu eta kontsultatzeko interfaze
+grafiko sinple bat.
+
+------------------------------------------------------------------------
+
+# compose.yml edukia
+
+``` yaml
 services:
 
   db:
@@ -41,16 +86,20 @@ services:
     restart: always
     shm_size: 128mb
     ports:
-      - "5432:5432"
+      - 5432:5432
+
     volumes:
       - ./postgresql:/var/lib/postgresql
+      - ./initdb:/docker-entrypoint-initdb.d # datubasea inizializatzeko eta datuak sartzeko
+
     environment:
-      POSTGRES_USER: admin
-      POSTGRES_PASSWORD: admin
-      POSTGRES_DB: jatetxea
+      POSTGRES_USER: admin      # datubasearen erabiltzailea
+      POSTGRES_PASSWORD: admin  # datubasearen pasahitza
+      POSTGRES_DB: jatetxea     # datubasearen izena
 
   adminer:
     image: adminer
     restart: always
     ports:
-      - "8080:8080"
+      - 8080:8080
+```

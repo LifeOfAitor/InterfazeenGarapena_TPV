@@ -333,6 +333,7 @@ namespace erronkaTPVsistema
             }
         }
 
+        // mahaiak erreserbatzeko ezarritako egunerako eta norentzako
         public static void erreserbatuMahaiak(string aukeratutakoMahaiak, string erabiltzailea, DateTime? erreserbadata, string noiz)
         {
             List<string> mahaiak = aukeratutakoMahaiak.Split(' ').ToList();
@@ -365,6 +366,7 @@ namespace erronkaTPVsistema
             }
         }
 
+        // zenbat mahai dauzkagun kargatzen du datubasetik, horren arabera kargatuko ditu usercontroll egindako mahaiak
         public static int kargatuMahaiak()
         {
             if (dataSource == null)
